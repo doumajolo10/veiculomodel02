@@ -1087,7 +1087,11 @@ footer{background:var(--dark);color:rgba(255,255,255,.7);padding:34px 0 96px;fon
   marcar(); window.marcarMascaras=marcar;
   new MutationObserver(function(){ marcar(); }).observe(document.body,{childList:true,subtree:true});
   /* rede de segurança: nada fica escondido por falha do observador */
-  setInterval(function(){ [].slice.call(document.querySelectorAll(".mask-rv:not(.on)")).forEach(function(im){ var r=im.getBoundingClientRect(); if(r.top<innerHeight*1.05&&r.bottom>-50) revelar(im); }); },900);
+  setInterval(function(){ var agora=Date.now(); [].slice.call(document.querySelectorAll(".mask-rv:not(.on)")).forEach(function(im){ var r=im.getBoundingClientRect();
+    if(!im.dataset.mt) im.dataset.mt=agora;
+    var naTela=r.top<innerHeight*1.05&&r.bottom>-50&&r.right>-50&&r.left<innerWidth*1.05;
+    /* nada fica escondido: passados 6 segundos a foto aparece de qualquer jeito */
+    if(naTela||agora-im.dataset.mt>6000) revelar(im); }); },800);
 })();
 </script>
 
